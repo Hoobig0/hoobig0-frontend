@@ -1,12 +1,28 @@
-import "~/styles/global.css";
+import { StrictMode } from "react";
+import ReactDOM from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 
-function App() {
-  return (
-    <div className="bg-red-300">
-      후비고홈
-      <div></div>
-    </div>
-  );
+import { routeTree } from "./routeTree.gen";
+import Provider from "./provider";
+
+const router = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
 }
 
-export default App;
+// Render the app
+const rootElement = document.getElementById("root")!;
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <Provider>
+        <RouterProvider router={router} />
+      </Provider>
+    </StrictMode>,
+  );
+}
