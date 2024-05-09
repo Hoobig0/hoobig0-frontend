@@ -4,7 +4,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
 import Provider from "./provider";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const router = createRouter({ routeTree });
 
 // Register the router instance for type safety
@@ -14,6 +14,17 @@ declare module "@tanstack/react-router" {
   }
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
+
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
@@ -21,7 +32,9 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <Provider>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </Provider>
     </StrictMode>,
   );
