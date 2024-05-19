@@ -1,16 +1,38 @@
 import { useEffect } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import cctvImage from "/cctv.svg";
-import { cctv_list } from "../libs/data";
+import { cctv_list } from "~/libs/data";
+import { useQuery } from "@tanstack/react-query";
+import { queryCctv } from "~/api/cctv/queryFn";
+
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
+
 declare global {
   interface Window {
     kakao: any;
   }
 }
+
+const DUMMY_MY_LOC = { x: 126.99511, y: 37.24616 };
+
 function Index() {
+  const myLocation = DUMMY_MY_LOC;
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["cctv_list"],
+    queryFn: () => queryCctv(myLocation),
+  });
+
+  if (isLoading) {
+    return <div>로딩중</div>;
+  }
+
+  if (isError) {
+    return <span>에러: {error.message}</span>;
+  }
+
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {
