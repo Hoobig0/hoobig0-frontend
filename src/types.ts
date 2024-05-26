@@ -8,7 +8,7 @@ export type cctvResponse = {
 };
 
 export type cctv = {
-  cctv_id: number;
-  cctv_x: number;
-  cctv_y: number;
+  cctvId: number;
+  x: string;
+  y: string;
 };
