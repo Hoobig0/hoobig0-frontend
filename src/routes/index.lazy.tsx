@@ -24,14 +24,7 @@ function Index() {
     queryKey: ["cctv_list"],
     queryFn: () => queryCctv(myLocation),
   });
-
-  if (isLoading) {
-    return <div>로딩중</div>;
-  }
-
-  if (isError) {
-    return <span>에러: {error.message}</span>;
-  }
+  console.log(data);
 
   useEffect(() => {
     const container = document.getElementById("map");
@@ -44,15 +37,24 @@ function Index() {
     const imageSrc = cctvImage;
     const imageSize = new window.kakao.maps.Size(24, 35);
     const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
-    cctv_list.map((cctv) => {
-      new window.kakao.maps.Marker({
-        map: map,
-        position: new window.kakao.maps.LatLng(cctv.cctv_x, cctv.cctv_y),
-        image: markerImage,
+    data &&
+      data.map((cctv) => {
+        new window.kakao.maps.Marker({
+          map: map,
+          position: new window.kakao.maps.LatLng(cctv.x, cctv.y),
+          image: markerImage,
+        });
+        console.log(cctv);
       });
-    });
-  }, []);
+    console.log("실행됨");
+  }, [data]);
+  // if (isLoading) {
+  //   return <div>로딩중</div>;
+  // }
 
+  // if (isError) {
+  //   return <span>에러: {error.message}</span>;
+  // }
   return (
     <>
       <h1>아주대 맛집이지만 CCTV인척</h1>
